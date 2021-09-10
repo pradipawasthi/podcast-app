@@ -5,6 +5,7 @@ import com.fabirt.podcastapp.data.network.constant.ListenNotesAPI
 import com.fabirt.podcastapp.data.network.service.PodcastService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -21,6 +22,14 @@ object ListenNotesAPIClient {
 
         val httpClient = OkHttpClient.Builder()
             .addInterceptor(requestInterceptor)
+            .apply {
+                if (BuildConfig.DEBUG) {
+                    addInterceptor(
+                        HttpLoggingInterceptor()
+                            .also { it.level = HttpLoggingInterceptor.Level.BODY }
+                    )
+                }
+            }
 
         return httpClient.build()
     }
